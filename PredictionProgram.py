@@ -144,9 +144,9 @@ class ViewResultPage(Frame):
 		label = Label(self, text="View Result Files", font=LARGE_FONT)
 		label.pack(pady=10,padx=10)
 		
-		button= Button(self, text='Choose a Results file to view its contents',  font=Fine_font, command=ViewResults)
+		button= Button(self, text='Choose a Results file to view its contents',  font=Fine_font, command=resultsView.ViewResults)
 		button.pack(pady=40,padx=40)
-		button2= Button(self, text='Choose a module file to gets its average Percentile Deviation and other values',  font=Fine_font, command=ViewPercentileResults)
+		button2= Button(self, text='Choose a module file to gets its average Percentile Deviation and other values',  font=Fine_font, command=resultsView.ViewPercentileResults)
 		button2.pack(pady=40,padx=40)
 		button3= Button(self, text='Back to main menu',  font=Fine_font, command=lambda: controller.show_frame(StartPage)).pack(side = BOTTOM)
 
@@ -159,11 +159,11 @@ class UpdatePage(Frame):
 		label.pack(pady=20,padx=20)
 
      
-		button= Button(self, text='Update database with a single entry (Sentiment.csv or Box.csv file)',  font=Fine_font, command=callbackUpdateDB)
+		button= Button(self, text='Update database with a single entry (Sentiment.csv or Box.csv file)',  font=Fine_font, command=updateDB.callbackUpdateDB)
 		button.pack(pady=20,padx=20)
 		
 		
-		button2= Button(self, text='Rewrite the database to have a file act as the new default database',  font=Fine_font, command=callbackRewriteDB)
+		button2= Button(self, text='Rewrite the database to have a file act as the new default database',  font=Fine_font, command=updateDB.callbackRewriteDB)
 		button2.pack(pady=20,padx=20)
 
 		button3= Button(self, text='Back to main menu',  font=Fine_font, command=lambda: controller.show_frame(StartPage)).pack(side = BOTTOM)
@@ -178,9 +178,9 @@ class DatasetPredictPage(Frame):
 		label.pack(pady=20,padx=20)
 
      		
-		button2= Button(self, text='See the prediction statistics for the current database',  font=Fine_font, command=callbackDBPred).pack()
+		button2= Button(self, text='See the prediction statistics for the current database',  font=Fine_font, command=callback.callbackDBPred).pack()
 
-		button= Button(self, text='See the prediction statistics for a file that is a dataset of movies',  font=Fine_font, command=callbackDatasetPred).pack()
+		button= Button(self, text='See the prediction statistics for a file that is a dataset of movies',  font=Fine_font, command=callback.callbackDatasetPred).pack()
 		
 		
 
@@ -242,7 +242,7 @@ class BoxSentimentPage(Frame):
 
 			for index,row in decf.iterrows():
 	
-				decf.at[index, 'Sentiment'] = get_tweet_sentiment(row['content'])
+				decf.at[index, 'Sentiment'] = tweetActs.get_tweet_sentiment(row['content'])
 			#twitGeter(name2)
 			print("Done applying Sentiment, now counting")
 			pt = 0
@@ -266,28 +266,28 @@ class BoxSentimentPage(Frame):
 					pt = pt + 1
 					if (math.isnan(float(decf.at[index, 'replies'])) == False):
 						prl = prl + float(decf.at[index, 'replies'])
-					if (math.isnan(float(stringparser(decf.at[index, 'favorites']))) == False):
-						pf = pf + float(stringparser(decf.at[index, 'favorites']))
-					if (math.isnan(float(stringparser(decf.at[index, 'retweets']))) == False):
-						prt = prt + float(stringparser(decf.at[index, 'retweets']))
+					if (math.isnan(float(tweetActs.stringparser(decf.at[index, 'favorites']))) == False):
+						pf = pf + float(tweetActs.stringparser(decf.at[index, 'favorites']))
+					if (math.isnan(float(tweetActs.stringparser(decf.at[index, 'retweets']))) == False):
+						prt = prt + float(tweetActs.stringparser(decf.at[index, 'retweets']))
 
 				elif  decf.at[index, 'Sentiment'] == 'negative':
 					negt = negt + 1
 					if (math.isnan(float(decf.at[index, 'replies'])) == False):
 						negrl = negrl + float(decf.at[index, 'replies'])
-					if (math.isnan(float(stringparser(decf.at[index, 'favorites']))) == False):
-						negf = negf + float(stringparser(decf.at[index, 'favorites']))
-					if (math.isnan(float(stringparser(decf.at[index, 'retweets']))) == False):
-						negrt = negrt + float(stringparser(decf.at[index, 'retweets']))
+					if (math.isnan(float(tweetActs.stringparser(decf.at[index, 'favorites']))) == False):
+						negf = negf + float(tweetActs.stringparser(decf.at[index, 'favorites']))
+					if (math.isnan(float(tweetActs.stringparser(decf.at[index, 'retweets']))) == False):
+						negrt = negrt + float(tweetActs.stringparser(decf.at[index, 'retweets']))
 
 				else:
 					neut = neut + 1
 					if (math.isnan(float(decf.at[index, 'replies'])) == False):
 						neurl = neurl + float(decf.at[index, 'replies'])
-					if (math.isnan(float(stringparser(decf.at[index, 'favorites']))) == False):
-						neuf = neuf + float(stringparser(decf.at[index, 'favorites']))
-					if (math.isnan(float(stringparser(decf.at[index, 'retweets']))) == False):
-						neurt = neurt + float(stringparser(decf.at[index, 'retweets']))
+					if (math.isnan(float(tweetActs.stringparser(decf.at[index, 'favorites']))) == False):
+						neuf = neuf + float(tweetActs.stringparser(decf.at[index, 'favorites']))
+					if (math.isnan(float(tweetActs.stringparser(decf.at[index, 'retweets']))) == False):
+						neurt = neurt + float(tweetActs.stringparser(decf.at[index, 'retweets']))
 
 			profit= (float(BoxOfficeIn.get())) / (float(BudgetIn.get()))
 			lop.loc[0] = [decf.at[0, 'movie']] + [pt] + [neut] + [negt] + [pf] + [neuf] + [negf] + [prt] + [neurt] + [negrt] + [prl] + [neurl] + [negrl] + [BudgetIn.get()] + [BoxOfficeIn.get()] + [profit]		
@@ -331,7 +331,7 @@ class NoBoxSentimentPage(Frame):
 
 			for index,row in decf.iterrows():
 	
-				decf.at[index, 'Sentiment'] = get_tweet_sentiment(row['content'])
+				decf.at[index, 'Sentiment'] = tweetActs.get_tweet_sentiment(row['content'])
 			#twitGeter(name2)
 			print("Done applying Sentiment, now counting")
 			pt = 0
@@ -355,28 +355,28 @@ class NoBoxSentimentPage(Frame):
 					pt = pt + 1
 					if (math.isnan(float(decf.at[index, 'replies'])) == False):
 						prl = prl + float(decf.at[index, 'replies'])
-					if (math.isnan(float(stringparser(decf.at[index, 'favorites']))) == False):
-						pf = pf + float(stringparser(decf.at[index, 'favorites']))
-					if (math.isnan(float(stringparser(decf.at[index, 'retweets']))) == False):
-						prt = prt + float(stringparser(decf.at[index, 'retweets']))
+					if (math.isnan(float(tweetActs.stringparser(decf.at[index, 'favorites']))) == False):
+						pf = pf + float(tweetActs.stringparser(decf.at[index, 'favorites']))
+					if (math.isnan(float(tweetActs.stringparser(decf.at[index, 'retweets']))) == False):
+						prt = prt + float(tweetActs.stringparser(decf.at[index, 'retweets']))
 
 				elif  decf.at[index, 'Sentiment'] == 'negative':
 					negt = negt + 1
 					if (math.isnan(float(decf.at[index, 'replies'])) == False):
 						negrl = negrl + float(decf.at[index, 'replies'])
-					if (math.isnan(float(stringparser(decf.at[index, 'favorites']))) == False):
-						negf = negf + float(stringparser(decf.at[index, 'favorites']))
-					if (math.isnan(float(stringparser(decf.at[index, 'retweets']))) == False):
-						negrt = negrt + float(stringparser(decf.at[index, 'retweets']))
+					if (math.isnan(float(tweetActs.stringparser(decf.at[index, 'favorites']))) == False):
+						negf = negf + float(tweetActs.stringparser(decf.at[index, 'favorites']))
+					if (math.isnan(float(tweetActs.stringparser(decf.at[index, 'retweets']))) == False):
+						negrt = negrt + float(tweetActs.stringparser(decf.at[index, 'retweets']))
 
 				else:
 					neut = neut + 1
 					if (math.isnan(float(decf.at[index, 'replies'])) == False):
 						neurl = neurl + float(decf.at[index, 'replies'])
-					if (math.isnan(float(stringparser(decf.at[index, 'favorites']))) == False):
-						neuf = neuf + float(stringparser(decf.at[index, 'favorites']))
-					if (math.isnan(float(stringparser(decf.at[index, 'retweets']))) == False):
-						neurt = neurt + float(stringparser(decf.at[index, 'retweets']))
+					if (math.isnan(float(tweetActs.stringparser(decf.at[index, 'favorites']))) == False):
+						neuf = neuf + float(tweetActs.stringparser(decf.at[index, 'favorites']))
+					if (math.isnan(float(tweetActs.stringparser(decf.at[index, 'retweets']))) == False):
+						neurt = neurt + float(tweetActs.stringparser(decf.at[index, 'retweets']))
 
 			
 			lop.loc[0] = [decf.at[0, 'movie']] + [pt] + [neut] + [negt] + [pf] + [neuf] + [negf] + [prt] + [neurt] + [negrt] + [prl] + [neurl] + [negrl] + [BudgetIn.get()]		
@@ -439,31 +439,31 @@ class DatasetResultPage(Frame):
 		label.pack(pady=20,padx=20)
 
      
-		button= Button(self, text='See all the values', font=small_font, command=AllValuesResult).pack()
+		button= Button(self, text='See all the values', font=small_font, command=results.AllValuesResult).pack()
 		
 		
-		button2= Button(self, text='Module 1 Values', font=small_font, command=Module1Result).pack()
+		button2= Button(self, text='Module 1 Values', font=small_font, command=results.Module1Result).pack()
 		
-		button9= Button(self, text='Module 2 Values', font=small_font, command=Module2Result).pack()
+		button9= Button(self, text='Module 2 Values', font=small_font, command=results.Module2Result).pack()
 	
-		button10= Button(self, text='Module 3 Values', font=small_font, command=Module3Result).pack()
+		button10= Button(self, text='Module 3 Values', font=small_font, command=results.Module3Result).pack()
 
-		button11= Button(self, text='Module 4 Values', font=small_font, command=Module4Result).pack()
+		button11= Button(self, text='Module 4 Values', font=small_font, command=results.Module4Result).pack()
 
-		button5= Button(self, text='Show results for the best case scenario', font=small_font, command=BestCaseResult).pack()
+		button5= Button(self, text='Show results for the best case scenario', font=small_font, command=results.BestCaseResult).pack()
 		
 		
-		button4= Button(self, text='See overall results', font=small_font, command= OverallResult).pack()
+		button4= Button(self, text='See overall results', font=small_font, command= results.OverallResult).pack()
 	
 		
 		
-		button7= Button(self, text='See coefficients for module 1 and 2', font=small_font, command=Coefficient12Result).pack()
+		button7= Button(self, text='See coefficients for module 1 and 2', font=small_font, command=results.Coefficient12Result).pack()
 		
-		button8= Button(self, text='See coefficients for module 3 and 4', font=small_font, command=Coefficient34Result).pack()
+		button8= Button(self, text='See coefficients for module 3 and 4', font=small_font, command=results.Coefficient34Result).pack()
 
-		button15= Button(self, text='See the movies that were correctly predicted their best module', font=small_font, command=CorrectResult).pack()
+		button15= Button(self, text='See the movies that were correctly predicted their best module', font=small_font, command=results.CorrectResult).pack()
 	
-		button13= Button(self, text='Create a timestamped folder to save results', font=small_font, command=SaveDatasetResults).pack()
+		button13= Button(self, text='Create a timestamped folder to save results', font=small_font, command=results.SaveDatasetResults).pack()
 
 		
 
@@ -1005,20 +1005,20 @@ class PredictPage(Frame):
 		label.pack(pady=20,padx=20)
 
      
-		button= Button(self, text='Select File with Box Office information', font=Fine_font, command=callbackPredict).pack()
+		button= Button(self, text='Select File with Box Office information', font=Fine_font, command=callback.callbackPredict).pack()
 		
 		
-		button2= Button(self, text='Select File that has no Box Office information', font=Fine_font, command=callbackPredict2).pack()
+		button2= Button(self, text='Select File that has no Box Office information', font=Fine_font, command=callback.callbackPredict2).pack()
 
-		button5= Button(self, text='Show results for the last Box Office information prediction', font=Fine_font, command=OpenResult).pack()
+		button5= Button(self, text='Show results for the last Box Office information prediction', font=Fine_font, command=results.OpenResult).pack()
 		
 		
-		button4= Button(self, text='Show results for the last prediction that didn\'t have box office information', font=Fine_font, command= ClosedResult).pack()
+		button4= Button(self, text='Show results for the last prediction that didn\'t have box office information', font=Fine_font, command= results.ClosedResult).pack()
 	
-		button6= Button(self, text='Save for last prediction that had Box Office Information', font=Fine_font, command=SaveOpenResult).pack()
+		button6= Button(self, text='Save for last prediction that had Box Office Information', font=Fine_font, command=results.SaveOpenResult).pack()
 		
 		
-		button7= Button(self, text='Save for last prediction that has no Box Office information', font=Fine_font, command=SaveClosedResult).pack()
+		button7= Button(self, text='Save for last prediction that has no Box Office information', font=Fine_font, command=results.SaveClosedResult).pack()
 
 		label3 = Label(self, text="Results are saved in the format \"~BoxPredictResults.csv\" or  \"~NoBoxResults.csv\" respectively, where ~ is the name of the movie", font=small_font).pack(pady=10,padx=10)
 
